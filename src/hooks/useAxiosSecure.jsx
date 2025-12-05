@@ -3,7 +3,7 @@ import { useEffect, useCallback, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProvider"; // Assuming this path
 
-const axiosSecure = axios.create({
+export const axiosSecure = axios.create({
     baseURL: import.meta.env.VITE_AP,
 });
 
