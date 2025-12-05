@@ -118,7 +118,7 @@ const AddFood = () => {
                                 type="text"
                                 name="pickupLocation"
                                 required
-                                placeholder="e.g. 123 Main St, New York"
+                                placeholder="e.g. Bashundhara R/A, Dhaka"
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 transition-colors"
                             />
                         </div>
