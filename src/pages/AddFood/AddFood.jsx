@@ -5,6 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { FaUtensils, FaMapMarkerAlt, FaCalendarAlt, FaClipboardList, FaImage, FaBox } from 'react-icons/fa';
+import PageTitle from '../../components/PageTitle';
 
 const AddFood = () => {
     const { user } = useContext(AuthContext);
@@ -56,6 +57,7 @@ const AddFood = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+            <PageTitle title="Add Food" />
             <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
                 <div className="bg-green-600 py-6 px-8">
                     <h2 className="text-3xl font-extrabold text-white text-center">Add New Food</h2>
@@ -179,8 +181,8 @@ const AddFood = () => {
                             type="submit"
                             disabled={mutation.isPending}
                             className={`w-full py-4 rounded-xl text-white font-bold text-lg shadow-lg transition-transform transform active:scale-95 ${mutation.isPending
-                                    ? 'bg-gray-400 cursor-not-allowed'
-                                    : 'bg-green-600 hover:bg-green-700 hover:shadow-xl'
+                                ? 'bg-gray-400 cursor-not-allowed'
+                                : 'bg-green-600 hover:bg-green-700 hover:shadow-xl'
                                 }`}
                         >
                             {mutation.isPending ? 'Adding Food...' : 'Add Food'}

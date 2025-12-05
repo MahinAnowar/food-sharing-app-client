@@ -4,6 +4,7 @@ import useAxiosSecure from '../../hooks/useAxiosSecure';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FaMapMarkerAlt, FaSearch, FaSortAmountDown, FaSortAmountUp, FaTh, FaThLarge } from 'react-icons/fa';
+import PageTitle from '../../components/PageTitle';
 
 const AvailableFoods = () => {
     const axiosSecure = useAxiosSecure();
@@ -25,6 +26,7 @@ const AvailableFoods = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 py-10">
+            <PageTitle title="Available Foods" />
             <div className="container mx-auto px-4">
                 <div className="text-center mb-10">
                     <h1 className="text-4xl font-bold text-gray-800 mb-4">Available Foods</h1>

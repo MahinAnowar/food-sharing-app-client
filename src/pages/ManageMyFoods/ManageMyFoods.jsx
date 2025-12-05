@@ -4,6 +4,7 @@ import useAxiosSecure from '../../hooks/useAxiosSecure';
 import { AuthContext } from '../../providers/AuthProvider';
 import toast from 'react-hot-toast';
 import { FaEdit, FaTrash, FaExclamationTriangle } from 'react-icons/fa';
+import PageTitle from '../../components/PageTitle';
 
 const ManageMyFoods = () => {
     const { user } = useContext(AuthContext);
@@ -102,6 +103,7 @@ const ManageMyFoods = () => {
 
     return (
         <div className="container mx-auto px-4 py-10 min-h-screen bg-gray-50">
+            <PageTitle title="Manage My Foods" />
             <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">Manage My Foods</h1>
 
             {foods.length === 0 ? (

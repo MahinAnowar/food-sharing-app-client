@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import { motion } from 'framer-motion';
 import { FaMapMarkerAlt, FaHandHoldingHeart, FaTruck, FaSmileBeam } from 'react-icons/fa';
+import PageTitle from '../../components/PageTitle';
 
 const Home = () => {
     const [featuredFoods, setFeaturedFoods] = useState([]);
@@ -22,6 +23,7 @@ const Home = () => {
 
     return (
         <div className="flex flex-col min-h-screen">
+            <PageTitle title="Home" />
             {/* Hero Section */}
             <section
                 className="relative h-[600px] flex items-center justify-center bg-cover bg-center"

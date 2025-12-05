@@ -5,6 +5,7 @@ import useAxiosSecure from '../../hooks/useAxiosSecure';
 import { AuthContext } from '../../providers/AuthProvider';
 import toast from 'react-hot-toast';
 import { FaMapMarkerAlt, FaCalendarAlt, FaUser, FaEnvelope, FaBox } from 'react-icons/fa';
+import PageTitle from '../../components/PageTitle';
 
 const FoodDetails = () => {
     const { id } = useParams();
@@ -69,6 +70,7 @@ const FoodDetails = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 py-10 px-4">
+            <PageTitle title="Food Details" />
             <div className="container mx-auto max-w-5xl">
                 <div className="bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row">
                     {/* Image Section */}

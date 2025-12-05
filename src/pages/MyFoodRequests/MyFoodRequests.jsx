@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import { AuthContext } from '../../providers/AuthProvider';
+import PageTitle from '../../components/PageTitle';
 
 const MyFoodRequests = () => {
     const { user } = useContext(AuthContext);
@@ -26,6 +27,7 @@ const MyFoodRequests = () => {
 
     return (
         <div className="container mx-auto px-4 py-10 min-h-screen">
+            <PageTitle title="My Food Requests" />
             <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">My Food Requests</h1>
 
             {requests.length === 0 ? (
@@ -62,8 +64,8 @@ const MyFoodRequests = () => {
                                     </td>
                                     <td className="text-center">
                                         <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${request.status === 'requested' ? 'bg-yellow-100 text-yellow-700' :
-                                                request.status === 'confirmed' ? 'bg-green-100 text-green-700' :
-                                                    'bg-gray-100 text-gray-600'
+                                            request.status === 'confirmed' ? 'bg-green-100 text-green-700' :
+                                                'bg-gray-100 text-gray-600'
                                             }`}>
                                             {request.status}
                                         </span>

@@ -4,6 +4,7 @@ import { AuthContext } from '../../providers/AuthProvider';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa';
+import PageTitle from '../../components/PageTitle';
 
 const Login = () => {
     const { signIn, googleSignIn } = useContext(AuthContext);
@@ -65,6 +66,7 @@ const Login = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+            <PageTitle title="Login" />
             <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-xl">
                 <div className="text-center">
                     <h2 className="mt-2 text-3xl font-extrabold text-gray-900">Welcome Back</h2>
