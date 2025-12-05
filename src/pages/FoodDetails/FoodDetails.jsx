@@ -128,67 +128,106 @@ const FoodDetails = () => {
             </div>
 
             {/* Request Modal */}
-            <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
-                <div className="modal-box bg-white p-0 overflow-hidden max-w-2xl w-full">
-                    <div className="bg-green-600 p-6 text-white flex justify-between items-center">
-                        <h3 className="font-bold text-2xl">Confirm Request</h3>
-                        <form method="dialog">
-                            <button className="btn btn-sm btn-circle btn-ghost text-white text-xl">✕</button>
-                        </form>
-                    </div>
-
-                    <form onSubmit={handleRequest} className="p-8 space-y-6 max-h-[70vh] overflow-y-auto">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="form-control">
-                                <label className="label text-sm font-medium text-gray-700">Food Name</label>
-                                <input type="text" value={food.foodName} readOnly className="input input-bordered bg-gray-100 text-gray-600 cursor-not-allowed" />
-                            </div>
-                            <div className="form-control">
-                                <label className="label text-sm font-medium text-gray-700">Food ID</label>
-                                <input type="text" value={food._id} readOnly className="input input-bordered bg-gray-100 text-gray-600 cursor-not-allowed" />
-                            </div>
-                            <div className="form-control">
-                                <label className="label text-sm font-medium text-gray-700">Donator Email</label>
-                                <input type="text" value={food.donator?.email} readOnly className="input input-bordered bg-gray-100 text-gray-600 cursor-not-allowed" />
-                            </div>
-                            <div className="form-control">
-                                <label className="label text-sm font-medium text-gray-700">My Email</label>
-                                <input type="text" value={user?.email} readOnly className="input input-bordered bg-gray-100 text-gray-600 cursor-not-allowed" />
-                            </div>
-                            <div className="form-control">
-                                <label className="label text-sm font-medium text-gray-700">Request Date</label>
-                                <input type="text" value={new Date().toLocaleDateString()} readOnly className="input input-bordered bg-gray-100 text-gray-600 cursor-not-allowed" />
-                            </div>
-                            <div className="form-control">
-                                <label className="label text-sm font-medium text-gray-700">Pickup Location</label>
-                                <input type="text" value={food.pickupLocation} readOnly className="input input-bordered bg-gray-100 text-gray-600 cursor-not-allowed" />
-                            </div>
-                        </div>
-
-                        <div className="form-control">
-                            <label className="label text-sm font-medium text-gray-700">Additional Notes</label>
-                            <textarea
-                                name="additionalNotes"
-                                className="textarea textarea-bordered h-24 focus:border-green-500 focus:ring-1 focus:ring-green-500"
-                                placeholder="Let the donator know when you can pick up..."
-                                defaultValue={food.additionalNotes} // Or leave empty for new notes? Usually request notes might be different. I'll leave empty or placeholder. The prompt said "Allow user to type in 'Additional Notes'". I'll leave it empty.
-                            ></textarea>
-                        </div>
-
-                        <div className="modal-action">
+            <dialog ref={modalRef} className="modal bg-transparent">
+                {/* Fixed Overlay */}
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
+                        {/* Header */}
+                        <div className="bg-green-600 p-4 flex justify-between items-center">
+                            <h3 className="text-xl font-bold text-white">Confirm Request</h3>
                             <button
-                                type="submit"
-                                disabled={requestMutation.isPending}
-                                className={`btn border-none text-white w-full text-lg ${requestMutation.isPending ? 'bg-gray-400' : 'bg-green-600 hover:bg-green-700'}`}
+                                onClick={() => modalRef.current.close()}
+                                className="text-white/80 hover:text-white hover:bg-white/20 rounded-full p-1 transition-colors"
                             >
-                                {requestMutation.isPending ? 'Requesting...' : 'Request'}
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
                             </button>
                         </div>
-                    </form>
+
+                        {/* Form */}
+                        <form onSubmit={handleRequest} className="p-0">
+                            <div className="grid grid-cols-2 gap-4 p-6 bg-white">
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Food Name</label>
+                                    <input
+                                        type="text"
+                                        value={food.foodName}
+                                        readOnly
+                                        className="w-full bg-gray-100 border-none rounded-lg px-3 py-2 text-gray-700 text-sm font-medium focus:ring-0"
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Food ID</label>
+                                    <input
+                                        type="text"
+                                        value={food._id}
+                                        readOnly
+                                        className="w-full bg-gray-100 border-none rounded-lg px-3 py-2 text-gray-700 text-sm font-medium focus:ring-0"
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Donator Email</label>
+                                    <input
+                                        type="text"
+                                        value={food.donator?.email}
+                                        readOnly
+                                        className="w-full bg-gray-100 border-none rounded-lg px-3 py-2 text-gray-700 text-sm font-medium focus:ring-0"
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">My Email</label>
+                                    <input
+                                        type="text"
+                                        value={user?.email}
+                                        readOnly
+                                        className="w-full bg-gray-100 border-none rounded-lg px-3 py-2 text-gray-700 text-sm font-medium focus:ring-0"
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Pickup Location</label>
+                                    <input
+                                        type="text"
+                                        value={food.pickupLocation}
+                                        readOnly
+                                        className="w-full bg-gray-100 border-none rounded-lg px-3 py-2 text-gray-700 text-sm font-medium focus:ring-0"
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Request Date</label>
+                                    <input
+                                        type="text"
+                                        value={new Date().toLocaleDateString()}
+                                        readOnly
+                                        className="w-full bg-gray-100 border-none rounded-lg px-3 py-2 text-gray-700 text-sm font-medium focus:ring-0"
+                                    />
+                                </div>
+
+                                <div className="col-span-2 space-y-1 mt-2">
+                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Additional Notes</label>
+                                    <textarea
+                                        name="additionalNotes"
+                                        className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-gray-700 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all resize-none"
+                                        rows="3"
+                                        placeholder="Any questions or pickup details..."
+                                        defaultValue={food.additionalNotes}
+                                    ></textarea>
+                                </div>
+                            </div>
+
+                            <div className="bg-gray-50 px-6 py-4 flex justify-end items-center gap-3">
+                                <button type="button" onClick={() => modalRef.current.close()} className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-200 font-medium transition-colors">
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={requestMutation.isPending}
+                                    className={`px-6 py-2 rounded-lg text-white font-bold shadow-md transition-all transform active:scale-95 ${requestMutation.isPending ? 'bg-gray-400' : 'bg-green-600 hover:bg-green-700 hover:shadow-lg'}`}
+                                >
+                                    {requestMutation.isPending ? 'Requesting...' : 'Request'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <form method="dialog" className="modal-backdrop">
-                    <button>close</button>
-                </form>
             </dialog>
         </div>
     );

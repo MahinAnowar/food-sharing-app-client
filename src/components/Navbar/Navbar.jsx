@@ -8,6 +8,7 @@ import { CgProfile } from 'react-icons/cg';
 const Navbar = () => {
     const { user, logOut } = useContext(AuthContext);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const handleLogOut = () => {
         logOut()
@@ -62,8 +63,11 @@ const Navbar = () => {
                     {/* Right Side: Auth */}
                     <div className="hidden md:flex items-center gap-4">
                         {user ? (
-                            <div className="dropdown dropdown-end">
-                                <label tabIndex={0} className="btn btn-ghost btn-circle avatar ring ring-green-500 ring-offset-base-100 ring-offset-2 transition-transform hover:scale-105">
+                            <div className="relative z-50">
+                                <div
+                                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                    className="btn btn-ghost btn-circle avatar ring ring-green-500 ring-offset-base-100 ring-offset-2 transition-transform hover:scale-105 cursor-pointer"
+                                >
                                     <div className="w-10 rounded-full">
                                         {user.photoURL ? (
                                             <img src={user.photoURL} alt={user.displayName} />
@@ -73,19 +77,28 @@ const Navbar = () => {
                                             </div>
                                         )}
                                     </div>
-                                </label>
-                                <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow-lg menu menu-sm dropdown-content bg-base-100 rounded-box w-52 border border-gray-100">
-                                    <li className="menu-title px-4 py-2 border-b border-gray-100">
-                                        <span className="text-gray-900 font-semibold truncate block">Hello, {user.displayName}</span>
-                                    </li>
-                                    {authLinks}
-                                    <div className="divider my-1"></div>
-                                    <li>
-                                        <button onClick={handleLogOut} className="flex items-center gap-2 text-red-500 hover:bg-red-50 hover:text-red-600">
-                                            <HiOutlineLogout className="text-lg" /> Logout
-                                        </button>
-                                    </li>
-                                </ul>
+                                </div>
+                                {isDropdownOpen && (
+                                    <div className="absolute right-0 top-14 w-60 bg-white rounded-xl shadow-2xl p-2 border border-gray-100 transition-all origin-top-right z-50">
+                                        <div className="px-4 py-3 border-b border-gray-100 mb-2 bg-gray-50 rounded-t-lg">
+                                            <span className="text-gray-900 font-semibold truncate block">Hello, {user.displayName}</span>
+                                            <span className="text-xs text-gray-500 truncate block">{user.email}</span>
+                                        </div>
+                                        <ul className="space-y-1" onClick={() => setIsDropdownOpen(false)}>
+                                            <li><NavLink to="/add-food" className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg transition-colors">Add Food</NavLink></li>
+                                            <li><NavLink to="/my-food-requests" className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg transition-colors">My Food Requests</NavLink></li>
+                                            <li><NavLink to="/manage-my-foods" className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg transition-colors">Manage My Foods</NavLink></li>
+
+                                            <div className="my-2 border-t border-gray-100"></div>
+
+                                            <li>
+                                                <button onClick={handleLogOut} className="w-full text-left flex items-center gap-3 px-4 py-2 text-red-500 hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors font-medium">
+                                                    <HiOutlineLogout className="text-lg" /> Logout
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                )}
                             </div>
                         ) : (
                             <div className="flex items-center gap-3">
@@ -111,45 +124,55 @@ const Navbar = () => {
                 </div>
             </div>
 
-            {/* Mobile Menu Overlay */}
-            <div className={`md:hidden absolute top-16 left-0 w-full bg-white shadow-lg border-b border-gray-100 transition-all duration-300 origin-top transform ${isMobileMenuOpen ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0 h-0 overflow-hidden'}`}>
-                <div className="px-4 py-4 space-y-3">
-                    <ul className="space-y-2">
-                        {navLinks}
+            {/* Mobile Menu Overlay / Drawer */}
+            <div className={`fixed inset-0 z-[90] bg-black/50 backdrop-blur-sm md:hidden transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setIsMobileMenuOpen(false)}></div>
+
+            <div className={`fixed top-0 right-0 z-[100] h-screen w-64 bg-white shadow-2xl transform transition-transform duration-300 ease-in-out md:hidden ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`} style={{ backgroundColor: '#ffffff' }}>
+                <div className="flex justify-end p-4">
+                    <button onClick={() => setIsMobileMenuOpen(false)} className="text-gray-500 hover:text-green-600">
+                        <FaTimes className="text-2xl" />
+                    </button>
+                </div>
+                <div className="px-6 py-4 space-y-4">
+                    <ul className="space-y-3">
+                        <li><NavLink to="/" onClick={() => setIsMobileMenuOpen(false)} className={({ isActive }) => `block font-medium text-lg ${isActive ? 'text-green-600' : 'text-gray-700'}`}>Home</NavLink></li>
+                        <li><NavLink to="/available-foods" onClick={() => setIsMobileMenuOpen(false)} className={({ isActive }) => `block font-medium text-lg ${isActive ? 'text-green-600' : 'text-gray-700'}`}>Available Foods</NavLink></li>
                     </ul>
-                    <div className="border-t border-gray-100 pt-4">
+                    <div className="pt-2">
                         {user ? (
-                            <>
-                                <div className="flex items-center gap-3 px-4 mb-4">
-                                    <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-green-500">
+                            <div className="border-t border-gray-200 pt-4">
+                                <div className="bg-gray-50 rounded-xl p-4 mb-4 flex items-center gap-3 border border-gray-100">
+                                    <div className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-green-500 flex-shrink-0">
                                         {user.photoURL ? (
                                             <img src={user.photoURL} alt={user.displayName} className="w-full h-full object-cover" />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center bg-green-100 text-green-600 font-bold">
+                                            <div className="w-full h-full flex items-center justify-center bg-green-100 text-green-600 font-bold text-lg">
                                                 {user.displayName?.charAt(0) || 'U'}
                                             </div>
                                         )}
                                     </div>
-                                    <div>
-                                        <p className="font-semibold text-gray-800">{user.displayName}</p>
-                                        <p className="text-xs text-gray-500">{user.email}</p>
+                                    <div className="overflow-hidden">
+                                        <p className="font-semibold text-gray-800 truncate">{user.displayName}</p>
+                                        <p className="text-xs text-gray-500 truncate">{user.email}</p>
                                     </div>
                                 </div>
-                                <ul className="space-y-1">
-                                    {authLinks}
-                                    <li className="mt-2">
-                                        <button onClick={handleLogOut} className="w-full text-left flex items-center gap-2 px-4 py-2 text-red-500 hover:bg-red-50 rounded-lg">
-                                            <HiOutlineLogout /> Logout
+                                <ul className="space-y-3 px-1">
+                                    <li><NavLink to="/add-food" onClick={() => setIsMobileMenuOpen(false)} className="block font-medium text-gray-700 hover:text-green-600 transition-colors">Add Food</NavLink></li>
+                                    <li><NavLink to="/my-food-requests" onClick={() => setIsMobileMenuOpen(false)} className="block font-medium text-gray-700 hover:text-green-600 transition-colors">My Food Requests</NavLink></li>
+                                    <li><NavLink to="/manage-my-foods" onClick={() => setIsMobileMenuOpen(false)} className="block font-medium text-gray-700 hover:text-green-600 transition-colors">Manage My Foods</NavLink></li>
+                                    <li className="pt-4 border-t border-gray-100 mt-2">
+                                        <button onClick={() => { handleLogOut(); setIsMobileMenuOpen(false); }} className="flex items-center gap-2 text-red-500 hover:text-red-600 font-medium w-full">
+                                            <HiOutlineLogout className="text-xl" /> Logout
                                         </button>
                                     </li>
                                 </ul>
-                            </>
+                            </div>
                         ) : (
-                            <div className="flex flex-col gap-3 px-4">
-                                <Link to="/login" className="w-full text-center px-5 py-2.5 rounded-lg border border-green-600 text-green-600 font-medium hover:bg-green-50 transition-colors">
+                            <div className="flex flex-col gap-3 pt-4 border-t border-gray-100">
+                                <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="w-full text-center px-5 py-3 rounded-xl border border-green-600 text-green-600 font-bold hover:bg-green-50 transition-colors">
                                     Login
                                 </Link>
-                                <Link to="/register" className="w-full text-center px-5 py-2.5 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700 shadow-md transition-colors">
+                                <Link to="/register" onClick={() => setIsMobileMenuOpen(false)} className="w-full text-center px-5 py-3 rounded-xl bg-green-600 text-white font-bold hover:bg-green-700 shadow-md transition-colors">
                                     Register
                                 </Link>
                             </div>
