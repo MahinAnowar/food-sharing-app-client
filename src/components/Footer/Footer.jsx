@@ -77,7 +77,7 @@ const Footer = () => {
                                 </div>
                                 <div>
                                     <p className="text-white font-medium">Headquarters</p>
-                                    <p className="text-sm">123 Food Street, Culinary District, FK 56789</p>
+                                    <p className="text-sm">123 Road, Unknown City</p>
                                 </div>
                             </li>
                             <li className="flex items-start gap-4">
@@ -86,7 +86,7 @@ const Footer = () => {
                                 </div>
                                 <div>
                                     <p className="text-white font-medium">Phone</p>
-                                    <p className="text-sm">+1 (555) 123-4567</p>
+                                    <p className="text-sm">+880111111111</p>
                                 </div>
                             </li>
                             <li className="flex items-start gap-4">
