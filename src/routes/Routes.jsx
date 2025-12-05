@@ -8,7 +8,6 @@ import AddFood from "../pages/AddFood/AddFood";
 import FoodDetails from "../pages/FoodDetails/FoodDetails";
 import ManageMyFoods from "../pages/ManageMyFoods/ManageMyFoods";
 import MyFoodRequests from "../pages/MyFoodRequests/MyFoodRequests";
-import UpdateFood from "../pages/UpdateFood/UpdateFood";
 import PrivateRoute from "./PrivateRoute";
 
 const router = createBrowserRouter([
@@ -21,6 +20,10 @@ const router = createBrowserRouter([
                 element: <Home />,
             },
             {
+                path: "/available-foods",
+                element: <AvailableFoods />,
+            },
+            {
                 path: "/login",
                 element: <Login />,
             },
@@ -29,15 +32,11 @@ const router = createBrowserRouter([
                 element: <Register />,
             },
             {
-                path: "/available-foods",
-                element: <AvailableFoods />,
-            },
-            {
                 path: "/add-food",
                 element: <PrivateRoute><AddFood /></PrivateRoute>,
             },
             {
-                path: "/foods/:id",
+                path: "/food/:id",
                 element: <PrivateRoute><FoodDetails /></PrivateRoute>,
             },
             {
@@ -47,13 +46,9 @@ const router = createBrowserRouter([
             {
                 path: "/my-food-requests",
                 element: <PrivateRoute><MyFoodRequests /></PrivateRoute>,
-            },
-            {
-                path: "/update-food/:id",
-                element: <PrivateRoute><UpdateFood /></PrivateRoute>,
-            },
-        ],
-    },
+            }
+        ]
+    }
 ]);
 
 export default router;

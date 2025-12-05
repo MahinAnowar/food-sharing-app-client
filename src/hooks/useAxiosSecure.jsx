@@ -1,44 +1,36 @@
 import axios from "axios";
-import { useEffect, useCallback, useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../providers/AuthProvider"; // Assuming this path
+import { AuthContext } from "../providers/AuthProvider";
 
-export const axiosSecure = axios.create({
-    baseURL: import.meta.env.VITE_AP,
+const axiosSecure = axios.create({
+    baseURL: import.meta.env.VITE_API_URL,
+    withCredentials: true
 });
 
 const useAxiosSecure = () => {
-    const { logOut } = useContext(AuthContext); // Assuming logOut is available
+    const { logOut } = useContext(AuthContext);
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Request Interceptor
-        const requestInterceptor = axiosSecure.interceptors.request.use((config) => {
-            const token = localStorage.getItem('access-token');
-            if (token) {
-                config.headers.Authorization = `Bearer ${token}`;
+        const interceptor = axiosSecure.interceptors.response.use(response => {
+            return response;
+        }, error => {
+            if (error.response.status === 401 || error.response.status === 403) {
+                logOut()
+                    .then(() => {
+                        navigate('/login');
+                    })
+                    .catch(error => console.log(error));
             }
-            return config;
+            return Promise.reject(error);
         });
 
-        // Response Interceptor
-        const responseInterceptor = axiosSecure.interceptors.response.use(
-            (response) => response,
-            async (error) => {
-                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-                    await logOut();
-                    navigate('/login');
-                }
-                return Promise.reject(error);
-            }
-        );
-
-        // Cleanup function for interceptors
         return () => {
-            axiosSecure.interceptors.request.eject(requestInterceptor);
-            axiosSecure.interceptors.response.eject(responseInterceptor);
-        };
+            axiosSecure.interceptors.response.eject(interceptor);
+        }
     }, [logOut, navigate]);
+
 
     return axiosSecure;
 };

@@ -1,115 +1,162 @@
 import React, { useContext, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { AuthContext } from '../../providers/AuthProvider';
+import { FaUtensils, FaBars, FaTimes } from 'react-icons/fa';
+import { HiOutlineLogout } from 'react-icons/hi';
+import { CgProfile } from 'react-icons/cg';
 
 const Navbar = () => {
     const { user, logOut } = useContext(AuthContext);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
-    const handleLogout = () => {
+    const handleLogOut = () => {
         logOut()
             .then(() => { })
-            .catch(error => console.error(error));
+            .catch(error => console.log(error));
     };
+
+    const navLinkClasses = ({ isActive }) =>
+        `px-4 py-2 rounded-lg transition-all duration-300 font-medium ${isActive
+            ? 'bg-green-600 text-white shadow-md'
+            : 'text-gray-700 hover:text-green-600 hover:bg-green-50'
+        }`;
 
     const navLinks = (
         <>
-            <li><NavLink to="/" className={({ isActive }) => isActive ? "text-blue-500" : ""}>Home</NavLink></li>
-            <li><NavLink to="/available-foods" className={({ isActive }) => isActive ? "text-blue-500" : ""}>Available Foods</NavLink></li>
+            <li><NavLink to="/" className={navLinkClasses}>Home</NavLink></li>
+            <li><NavLink to="/available-foods" className={navLinkClasses}>Available Foods</NavLink></li>
         </>
     );
 
-    const privateNavLinks = (
+    const authLinks = (
         <>
-            <li><NavLink to="/add-food" className={({ isActive }) => isActive ? "text-blue-500" : ""}>Add Food</NavLink></li>
-            <li><NavLink to="/manage-my-foods" className={({ isActive }) => isActive ? "text-blue-500" : ""}>My Foods</NavLink></li>
-            <li><NavLink to="/my-food-requests" className={({ isActive }) => isActive ? "text-blue-500" : ""}>My Food Requests</NavLink></li>
+            <li><NavLink to="/add-food" className="block px-4 py-2 hover:bg-gray-100 text-gray-700">Add Food</NavLink></li>
+            <li><NavLink to="/my-food-requests" className="block px-4 py-2 hover:bg-gray-100 text-gray-700">My Food Requests</NavLink></li>
+            <li><NavLink to="/manage-my-foods" className="block px-4 py-2 hover:bg-gray-100 text-gray-700">Manage My Foods</NavLink></li>
         </>
     );
 
     return (
-        <nav className="bg-white shadow-md">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16">
-                    <div className="flex items-center">
-                        <Link to="/" className="flex-shrink-0">
-                            <img className="h-8 w-8" src="/logo.svg" alt="Logo" />
+        <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm border-b border-gray-100">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex justify-between items-center h-16">
+                    {/* Brand */}
+                    <div className="flex-shrink-0 flex items-center gap-2 cursor-pointer">
+                        <Link to="/" className="flex items-center gap-2">
+                            <div className="p-2 bg-green-100 rounded-full">
+                                <FaUtensils className="text-green-600 text-xl" />
+                            </div>
+                            <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">
+                                Community Foods
+                            </span>
                         </Link>
-                        <div className="hidden md:block">
-                            <ul className="ml-10 flex items-baseline space-x-4">
-                                {navLinks}
-                                {user && privateNavLinks}
-                            </ul>
-                        </div>
                     </div>
-                    <div className="hidden md:block">
+
+                    {/* Desktop Menu */}
+                    <div className="hidden md:flex items-center space-x-4">
+                        <ul className="flex items-center space-x-2">
+                            {navLinks}
+                        </ul>
+                    </div>
+
+                    {/* Right Side: Auth */}
+                    <div className="hidden md:flex items-center gap-4">
                         {user ? (
-                            <div className="ml-4 flex items-center md:ml-6">
-                                <div className="ml-3 relative">
-                                    <div>
-                                        <button onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)} className="max-w-xs bg-white rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                            <span className="sr-only">Open user menu</span>
-                                            <img className="h-8 w-8 rounded-full" src={user.photoURL || "/placeholder.jpg"} alt="User" />
-                                        </button>
+                            <div className="dropdown dropdown-end">
+                                <label tabIndex={0} className="btn btn-ghost btn-circle avatar ring ring-green-500 ring-offset-base-100 ring-offset-2 transition-transform hover:scale-105">
+                                    <div className="w-10 rounded-full">
+                                        {user.photoURL ? (
+                                            <img src={user.photoURL} alt={user.displayName} />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center bg-green-100 text-green-600 text-xl font-bold">
+                                                {user.displayName?.charAt(0) || 'U'}
+                                            </div>
+                                        )}
                                     </div>
-                                    {isProfileMenuOpen && (
-                                        <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5">
-                                            <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
-                                        </div>
-                                    )}
-                                </div>
+                                </label>
+                                <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow-lg menu menu-sm dropdown-content bg-base-100 rounded-box w-52 border border-gray-100">
+                                    <li className="menu-title px-4 py-2 border-b border-gray-100">
+                                        <span className="text-gray-900 font-semibold truncate block">Hello, {user.displayName}</span>
+                                    </li>
+                                    {authLinks}
+                                    <div className="divider my-1"></div>
+                                    <li>
+                                        <button onClick={handleLogOut} className="flex items-center gap-2 text-red-500 hover:bg-red-50 hover:text-red-600">
+                                            <HiOutlineLogout className="text-lg" /> Logout
+                                        </button>
+                                    </li>
+                                </ul>
                             </div>
                         ) : (
-                            <div className="flex items-center space-x-4">
-                                <Link to="/login" className="text-gray-600 hover:text-blue-500">Login</Link>
-                                <Link to="/register" className="bg-blue-500 text-white px-3 py-2 rounded-md text-sm font-medium">Register</Link>
+                            <div className="flex items-center gap-3">
+                                <Link to="/login" className="px-5 py-2.5 rounded-full font-medium text-green-600 hover:bg-green-50 transition-colors">
+                                    Login
+                                </Link>
+                                <Link to="/register" className="px-5 py-2.5 rounded-full font-medium bg-green-600 text-white hover:bg-green-700 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">
+                                    Register
+                                </Link>
                             </div>
                         )}
                     </div>
-                    <div className="-mr-2 flex md:hidden">
-                        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            <span className="sr-only">Open main menu</span>
-                            {/* Icon for mobile menu */}
-                            <svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
+
+                    {/* Mobile Menu Button */}
+                    <div className="md:hidden flex items-center">
+                        <button
+                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            className="p-2 rounded-md text-gray-600 hover:text-green-600 hover:bg-green-50 focus:outline-none transition-colors"
+                        >
+                            {isMobileMenuOpen ? <FaTimes className="text-2xl" /> : <FaBars className="text-2xl" />}
                         </button>
                     </div>
                 </div>
             </div>
 
-            {isMobileMenuOpen && (
-                <div className="md:hidden">
-                    <ul className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            {/* Mobile Menu Overlay */}
+            <div className={`md:hidden absolute top-16 left-0 w-full bg-white shadow-lg border-b border-gray-100 transition-all duration-300 origin-top transform ${isMobileMenuOpen ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0 h-0 overflow-hidden'}`}>
+                <div className="px-4 py-4 space-y-3">
+                    <ul className="space-y-2">
                         {navLinks}
-                        {user && privateNavLinks}
                     </ul>
-                    <div className="pt-4 pb-3 border-t border-gray-200">
+                    <div className="border-t border-gray-100 pt-4">
                         {user ? (
-                            <div className="flex items-center px-5">
-                                <div className="flex-shrink-0">
-                                    <img className="h-10 w-10 rounded-full" src={user.photoURL || "/placeholder.jpg"} alt="" />
+                            <>
+                                <div className="flex items-center gap-3 px-4 mb-4">
+                                    <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-green-500">
+                                        {user.photoURL ? (
+                                            <img src={user.photoURL} alt={user.displayName} className="w-full h-full object-cover" />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center bg-green-100 text-green-600 font-bold">
+                                                {user.displayName?.charAt(0) || 'U'}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <p className="font-semibold text-gray-800">{user.displayName}</p>
+                                        <p className="text-xs text-gray-500">{user.email}</p>
+                                    </div>
                                 </div>
-                                <div className="ml-3">
-                                    <div className="text-base font-medium leading-none text-gray-800">{user.displayName}</div>
-                                    <div className="text-sm font-medium leading-none text-gray-500">{user.email}</div>
-                                </div>
-                            </div>
+                                <ul className="space-y-1">
+                                    {authLinks}
+                                    <li className="mt-2">
+                                        <button onClick={handleLogOut} className="w-full text-left flex items-center gap-2 px-4 py-2 text-red-500 hover:bg-red-50 rounded-lg">
+                                            <HiOutlineLogout /> Logout
+                                        </button>
+                                    </li>
+                                </ul>
+                            </>
                         ) : (
-                            <div className="px-2 space-y-1">
-                                <Link to="/login" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Login</Link>
-                                <Link to="/register" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Register</Link>
-                            </div>
-                        )}
-                         {user && (
-                            <div className="mt-3 px-2 space-y-1">
-                                <button onClick={handleLogout} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Logout</button>
+                            <div className="flex flex-col gap-3 px-4">
+                                <Link to="/login" className="w-full text-center px-5 py-2.5 rounded-lg border border-green-600 text-green-600 font-medium hover:bg-green-50 transition-colors">
+                                    Login
+                                </Link>
+                                <Link to="/register" className="w-full text-center px-5 py-2.5 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700 shadow-md transition-colors">
+                                    Register
+                                </Link>
                             </div>
                         )}
                     </div>
                 </div>
-            )}
+            </div>
         </nav>
     );
 };
