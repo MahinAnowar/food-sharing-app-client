@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "firebase/auth";
 import auth from "../firebase/firebase.init";
 
 export const AuthContext = createContext(null);
@@ -8,22 +8,28 @@ const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const googleProvider = new GoogleAuthProvider();
+
+    const googleSignIn = () => {
+        setLoading(true);
+        return signInWithPopup(auth, googleProvider);
+    };
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
+            console.log('current user', currentUser);
             setLoading(false);
         });
-
-        // Cleanup subscription on unmount
         return () => {
-            unsubscribe();
+            return unsubscribe();
         };
     }, []);
 
     const authInfo = {
         user,
         loading,
-        // other auth functions can be added here
+        googleSignIn,
     };
 
     return (
